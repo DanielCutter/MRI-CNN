@@ -26,11 +26,11 @@ valid_path = "C:/Users/dancu/PycharmProjects/firstCNN\data/ad-vs-cn/valid"
 # Use ImageDataGenerator to create 3 lots of batches
 train_batches = ImageDataGenerator(
     rescale=1/255).flow_from_directory(directory=train_path,
-        target_size=(160,160), classes=['cn_proc', 'ad_proc'], batch_size=20,
+        target_size=(80,80), classes=['cn', 'ad'], batch_size=100,
             color_mode="rgb")
 valid_batches = ImageDataGenerator(
     rescale=1/255).flow_from_directory(directory=valid_path,
-        target_size=(160,160), classes=['cn_proc', 'ad_proc'], batch_size=20,
+        target_size=(80,80), classes=['cn', 'ad'], batch_size=100,
             color_mode="rgb")
 # test_batches = ImageDataGenerator(
 #     rescale=1/255).flow_from_directory(directory=test_path,
@@ -40,7 +40,7 @@ valid_batches = ImageDataGenerator(
 imgs, labels = next(train_batches)
 
 # Test to see normalisation has occurred properly
-print(imgs[1][16])
+print(imgs[1][8])
 
 # Define method to plot MRIs
 def plotImages(images_arr):
@@ -81,17 +81,50 @@ plotImages(imgs)
 # model.add(Dense(units=128,activation="relu"))
 # model.add(Dense(units=2, activation="softmax"))
 
-# # This model hits around 70% train acc, 60% val acc
+# # Model from the paper
+# model = Sequential([
+#     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(160,160,3)),
+#     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
+#     MaxPool2D(pool_size=(2, 2), strides=2),
+#     Flatten(),
+#     Dense(units=2, activation='softmax')
+# ])
+
+## Model from Dr Paul
+# static_conv_layer=Conv2D(filters=16, kernel_size=(5, 5), activation='relu', padding = 'same')
+#
+# model = Sequential([
+#     Conv2D(filters=16, kernel_size=(5, 5), activation='relu', padding = 'same', input_shape=(32,32,3)),
+#     MaxPool2D(pool_size=(2, 2), strides=2),
+#     Dropout(0.1),
+#     static_conv_layer,
+#     MaxPool2D(pool_size=(2, 2), strides=2),
+#     Dropout(0.1),
+#     Flatten(),
+#     Dense(units=2, activation='softmax')
+# ])
+
+# This model hits around 75% train acc, 54% val acc
 model = Sequential([
-    Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(160,160,3)),
+    Conv2D(filters=16, kernel_size=(5, 5), activation='relu', padding = 'same', input_shape=(80,80,3)),
     MaxPool2D(pool_size=(2, 2), strides=2),
-    Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-    MaxPool2D(pool_size=(2, 2), strides=2),
-    Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
-    MaxPool2D(pool_size=(2, 2), strides=2),
+    # Dropout(0.1),
+    # Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
+    # MaxPool2D(pool_size=(2, 2), strides=2),
+    # Conv2D(filters=16, kernel_size=(3, 3), activation='relu', padding='same'),
+    # MaxPool2D(pool_size=(2, 2), strides=2),
     Flatten(),
     Dense(units=2, activation='softmax')
 ])
+
+# model = Sequential([
+#     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding = 'same', input_shape=(160,160,3)),
+#     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
+#     MaxPool2D(pool_size=(2, 2), strides=2),
+#     Conv2D(filters=32, kernel_size=(3, 3), activation='relu', padding='same'),
+#     Flatten(),
+#     Dense(units=2, activation='softmax')
+# ])
 
 ## Basic model with dropouts
 # model = Sequential([
@@ -117,6 +150,6 @@ model.fit(x=train_batches,
     steps_per_epoch=len(train_batches),
     validation_data=valid_batches,
     validation_steps=len(valid_batches),
-    epochs=20,
+    epochs=40,
     verbose=1
 )
