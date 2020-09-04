@@ -4,15 +4,14 @@ import matplotlib.pyplot as plt
 import os
 
 # imagePath = "C:/Users/dancu/PycharmProjects/firstCNN/data/ad-vs-cn/valid/ad/"
-imagePath = "C:/Users/dancu/PycharmProjects/firstCNN/data/ad-vs-cn/train/cn/not_preprocessed/ADNI_018_S_0043_MR_MPR____N3__Scaled_2_Br_20081002103555879_S25956_I118996_z080.png"
-directory = os.fsencode(imagePath)
+imagePath = "C:/Users/dancu/PycharmProjects/firstCNN/data/ad-vs-cn/train/ad/ADNI_002_S_1018_MR_MPR__GradWarp__B1_Correction__N3__Scaled_Br_20080113114436460_S43491_I87204_z080.png"
+# directory = os.fsencode(imagePath)
 
 # i = 0
 #
 # for file in os.listdir(directory):
 #     i = i+1
 #     filename = os.fsdecode(file)
-#     print(filename)
 #     cvImg = cv2.imread(imagePath+filename)
 #     medianBlurImg = cv2.medianBlur(cvImg, 3)
 #     edges = cv2.Canny(cvImg, 100, 200)
@@ -32,7 +31,7 @@ medianBlurImg = cv2.medianBlur(cvImg, 3)
 cv2.imshow("post-medianBlur", medianBlurImg)
 cv2.waitKey(0)
 # Edge detection
-edges = cv2.Canny(cvImg, 0, 300)
+edges = cv2.Canny(cvImg, 100, 250)
 
 plt.subplot(121),plt.imshow(cvImg, cmap='gray')
 plt.title('Original Image'), plt.xticks([]), plt.yticks([])

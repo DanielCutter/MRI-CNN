@@ -14,8 +14,6 @@ import os
 
 # Get the current working directory path
 current_dir = os.getcwd()
-# Import mnist data stored in the following path: current directory -> data/mnist.npz
-#(X_train, Y_train), (X_test, Y_test) = mnist.load_data(path=current_dir+'/data/mnist.npz')
 
 # reshape to be [samples][width][height][channels]
 X_train = X_train.reshape((X_train.shape[0], 28, 28, 1)).astype('float32')
@@ -46,6 +44,6 @@ model = baseline_model()
 # Fit the model
 model.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=10, batch_size=200)
 # Final evaluation of the model
-scores = model.evaluate(X_test, y_test, verbose=0)
+scores = model.evaluate(X_test, y_test, verbose=1)
 print("CNN Error: %.2f%%" % (100-scores[1]*100))
 
